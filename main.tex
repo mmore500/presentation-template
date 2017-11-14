@@ -1,0 +1,48 @@
+%\title{Presentation Template}
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage[compatibility=false]{caption}
+\usepackage{subcaption}
+\usepackage{csquotes}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage[scale=2]{ccicons}
+\usepackage{tikz}
+\usepackage{bm}
+
+\usepackage{multimedia}
+\usepackage{media9}
+
+\graphicspath{{./img/}}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\title{TITLE}
+\subtitle{EVENT}
+\date{DATE}
+\author{Matthew Andres Moreno \newline \texttt{mmore500@msu.edu}}
+\titlegraphic{\hfill\includegraphics[height=2cm]{img/MSU-Wordmark-Black}}
+
+\begin{document}
+
+\maketitle
+
+% \begin{frame}{Table of contents}
+%   \setbeamertemplate{section in toc}[sections numbered]
+%   \tableofcontents[hideallsubsections]
+% \end{frame}
+
+\input{tex/section.tex}
+
+\input{tex/appendix.tex}
+
+\input{tex/backup.tex}
+
+\end{document}
