@@ -7,7 +7,7 @@ From: ubuntu:18.04
 
 %labels
 Maintainer Matthew Andres Moreno
-Version 0.2.0
+Version 1.0.0
 
 ################################################################################
 # Copy any necessary files into the container
