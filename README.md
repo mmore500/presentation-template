@@ -4,6 +4,10 @@
 
 A LaTeX Beamer template for presentations using the Metropolis theme.
 
+### How To & What You Get
+
+See [here](https://twitter.com/MorenoMatthewA/status/1048676082952626177).
+
 ### Authorship
 
 Matthew Andres Moreno
