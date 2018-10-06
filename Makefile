@@ -11,6 +11,7 @@ sview:
 	gnome-open ${BUILD_DIR}.pdf 2>/dev/null
 
 ${BUILD_DIR}.pdf: main.tex
+	rm -f ${BUILD_DIR}.pdf
 	latexmk -pdf -silent \
     -jobname=${BUILD_DIR} \
     -pdflatex="pdflatex -interaction=nonstopmode" main.tex
@@ -23,3 +24,5 @@ cleaner:
 	# remove auxillary files, excepting .tex and .bib files
 	find . -type f -name ${BUILD_DIR}"*" ! -name '*.tex' ! -name '*.bib' -delete
 	rm -f main.nav main.snm
+
+.PHONY:  ${BUILD_DIR}.pdf
