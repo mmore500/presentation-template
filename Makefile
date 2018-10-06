@@ -10,11 +10,18 @@ view:
 sview:
 	gnome-open ${BUILD_DIR}.pdf 2>/dev/null
 
-${BUILD_DIR}.pdf: main.tex
+mmore500-presentation-template-master-latest.simg:
+	singularity pull shub://mmore500/presentation-template
+
+${BUILD_DIR}.pdf: main.tex mmore500-presentation-template-master-latest.simg
 	rm -f ${BUILD_DIR}.pdf
-	latexmk -pdf -silent \
-    -jobname=${BUILD_DIR} \
-    -pdflatex="pdflatex -interaction=nonstopmode" main.tex
+	sudo singularity exec \
+		--bind ..:/mnt \
+		--pwd /mnt/${BUILD_DIR} \
+		mmore500-presentation-template-master-latest.simg \
+			latexmk -pdf -silent \
+    		-jobname=${BUILD_DIR} \
+    		-pdflatex="xelatex -interaction=nonstopmode" main.tex
 
 clean:
 	rm -f ${BUILD_DIR}.pdf
@@ -22,7 +29,7 @@ clean:
 cleaner:
 	latexmk -CA
 	# remove auxillary files, excepting .tex and .bib files
-	find . -type f -name ${BUILD_DIR}"*" ! -name '*.tex' ! -name '*.bib' -delete
+	find . -type f -name ${BUILD_DIR}"*" ! -name '*.simg*' ! -name '*.tex' ! -name '*.bib' -delete
 	rm -f main.nav main.snm
 
 .PHONY:  ${BUILD_DIR}.pdf
