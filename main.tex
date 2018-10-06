@@ -14,6 +14,13 @@
 \usepackage{tikz}
 \usepackage{bm}
 
+\usepackage{footnpag} %reset footnotes at every page
+
+\makeatother
+\renewcommand{\thefootnote}{\ifcase\value{footnote}\or*\or
+**\or***\or****\fi}
+\makeatletter
+
 \graphicspath{{./img/}}
 
 \usepackage{pgfplots}
