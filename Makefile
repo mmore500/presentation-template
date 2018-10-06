@@ -17,7 +17,7 @@ ${BUILD_DIR}.pdf: main.tex
     -pdflatex="pdflatex -interaction=nonstopmode" main.tex
 
 clean:
-	rm ${BUILD_DIR}.pdf
+	rm -f ${BUILD_DIR}.pdf
 
 cleaner:
 	latexmk -CA
