@@ -13,6 +13,7 @@
 \usepackage{fontawesome}
 \usepackage{tikz}
 \usepackage{bm}
+\usepackage{adjustbox}
 
 \usepackage{footnpag} %reset footnotes at every page
 
@@ -20,6 +21,8 @@
 \renewcommand{\thefootnote}{\ifcase\value{footnote}\or*\or
 **\or***\or****\fi}
 \makeatletter
+
+\makeatletter\newcommand\HUGE{\@setfontsize\Huge{28}{34}}\makeatother
 
 \graphicspath{{./img/}}
 
@@ -29,11 +32,14 @@
 \usepackage{xspace}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
+
+
 \title{TITLE}
 \subtitle{EVENT}
 \date{DATE}
 \author{Matthew Andres Moreno \newline {\faTwitter} @MorenoMatthewA \newline}
 \titlegraphic{\vspace{32ex}\hfill\includegraphics[height=2.5cm]{img/BEACON-logo}}
+\newcommand{\projecturl}{https://osf.io/TODO}
 
 \begin{document}
 
