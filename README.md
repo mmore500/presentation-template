@@ -8,8 +8,6 @@ A LaTeX Beamer template for presentations using the Metropolis theme.
 
 ### Docker
 
-**Generate a PDF**
-
 If you want to build the container, after cloning this repository:
 
 ```bash
