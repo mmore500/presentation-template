@@ -56,10 +56,10 @@ Next, run it and bind the present working directory to data.
 singularity run --bind $PWD:/data presentation-template.simg mypdf
 ```
 
-And after you generate `mypdf.pdf` if you want to run atom editor
+If you want to run atom editor
 
 ```bash
-singularity exec --bind $PWD:/data presentation-template.simg atom mypdf.pdf
+singularity exec --bind $PWD:/data presentation-template.simg atom main.tex
 ```
 
 ### How To & What You Get
