@@ -88,7 +88,7 @@ git clone https://github.com/mozilla/Fira && \
     cp Fira/ttf/*.ttf /usr/share/fonts/truetype/FiraSans/ && \
     cp Fira/otf/*.otf /usr/share/fonts/opentype/FiraSans/ && \
     fc-cache -f -v && \
-    chmod -R u+x /usr/share/fonts && \
+    chmod -R 0777 /usr/share/fonts/* && \
     chmod u+x /entrypoint.sh
 
 %runscript

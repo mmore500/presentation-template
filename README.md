@@ -53,12 +53,18 @@ sudo singularity build presentation-template.simg Singularity
 Next, run it and bind the present working directory to data.
 
 ```bash
+singularity run --bind $PWD:/data presentation-template.simg mypdf
+```
 
+And after you generate `mypdf.pdf` if you want to run atom editor
+
+```bash
+singularity exec --bind $PWD:/data presentation-template.simg atom mypdf.pdf
 ```
 
 ### How To & What You Get
 
-See [here](https://twitter.com/MorenoMatthewA/status/1048676082952626177).
+The original post for the package is [here](https://twitter.com/MorenoMatthewA/status/1048676082952626177).
 
 ### Authorship
 
