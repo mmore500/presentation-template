@@ -22,7 +22,6 @@ From: ubuntu:18.04
 %post
 
 DEBIAN_FRONTEND=noninteractive
-ATOM_VERSION=1.7.4
 
 ################################################################################
 # Install additional packages
