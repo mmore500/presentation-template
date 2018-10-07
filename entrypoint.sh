@@ -11,7 +11,8 @@ fi
 
 if [ -f "main.tex" ]; then
     latexmk -pdf -silent -jobname="${PDF_FILE}" -pdflatex="xelatex -interaction=nonstopmode" main.tex
-    chmod 0777 /data/${PDF_FILE}*
+    echo "Changing permissions...";
+    chmod 0777 /data/${PDF_FILE}*;
 else
     echo "Please bind directory with main.tex to /data"
 fi
