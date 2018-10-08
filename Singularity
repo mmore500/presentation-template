@@ -1,20 +1,28 @@
-################################################################################
-# Basic bootstrap definition to build Ubuntu container
-################################################################################
-
 Bootstrap: docker
 From: ubuntu:18.04
 
+################################################################################
+# Basic bootstrap definition to build Ubuntu container
+#
+# sudo singularity build presentation-template.simg Singularity
+#
+################################################################################
+
 %labels
-Maintainer Matthew Andres Moreno
-Version 1.0.0
+    Maintainer Matthew Andres Moreno
+    Contributors @vsoch
+    Version 1.0.1
 
 ################################################################################
 # Copy any necessary files into the container
 ################################################################################
 %files
+    entrypoint.sh /entrypoint.sh
 
 %post
+
+DEBIAN_FRONTEND=noninteractive
+
 ################################################################################
 # Install additional packages
 ################################################################################
@@ -28,39 +36,37 @@ apt-get clean && apt-get update && apt-get install -y \
     locale-gen en_US.UTF-8 && \
     dpkg-reconfigure locales
 
-apt-get install -y dialog
-apt-get install -y apt-utils
-apt-get install -y texlive
-apt-get install -y texlive-full
-apt-get install -y curl
-apt-get install -y git
-apt-get install -y fontconfig
-apt-get install -y unzip
-apt-get install -y make
+apt-get install -y dialog \
+                   apt-utils \
+                   texlive \
+                   texlive-full \
+                   curl \
+                   git \
+                   fontconfig \
+                   unzip \
+                   make
+
+################################################################################
+# Install Fonts
+################################################################################
 
 # install Sans Forgetica fonts
 
-curl -L http://www.sansforgetica.rmit/Common/Zips/Sans%20Forgetica.zip > sansforgetica.zip
-unzip sansforgetica.zip
+curl -L http://www.sansforgetica.rmit/Common/Zips/Sans%20Forgetica.zip > sansforgetica.zip && \
+    unzip sansforgetica.zip
 
-mkdir -p /usr/share/fonts/opentype/ForgeticaSans
-cp Sans\ Forgetica/*.otf /usr/share/fonts/opentype/ForgeticaSans
+mkdir -p /usr/share/fonts/opentype/ForgeticaSans /code /data && \
+    cp Sans\ Forgetica/*.otf /usr/share/fonts/opentype/ForgeticaSans
 
 # install Fira Type fonts
 
-git clone https://github.com/mozilla/Fira
+git clone https://github.com/mozilla/Fira && \
+    mkdir -p /usr/share/fonts/truetype/FiraSans /usr/share/fonts/opentype/FiraSans && \
+    cp Fira/ttf/*.ttf /usr/share/fonts/truetype/FiraSans/ && \
+    cp Fira/otf/*.otf /usr/share/fonts/opentype/FiraSans/ && \
+    fc-cache -f -v && \
+    chmod -R 0777 /usr/share/fonts/* && \
+    chmod u+x /entrypoint.sh
 
-mkdir -p /usr/share/fonts/truetype/FiraSans
-mkdir -p /usr/share/fonts/opentype/FiraSans
-cp Fira/ttf/*.ttf /usr/share/fonts/truetype/FiraSans/
-cp Fira/otf/*.otf /usr/share/fonts/opentype/FiraSans/
-
-# update font cache
-
-fc-cache -f -v
-
-################################################################################
-# Run the user's login shell, or a user specified command
-################################################################################
 %runscript
-echo "running runscript!"
+    exec /bin/bash /entrypoint.sh "${@}"
