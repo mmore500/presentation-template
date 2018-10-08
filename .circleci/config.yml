@@ -90,7 +90,7 @@ dockerbuild: &dockerbuild
     command: |
         source ${BASH_ENV}
         echo "Building base image..."
-        docker build -t ${CONTAINER_NAME}:${DOCKER_TAG} .
+        docker build -t ${CONTAINER_NAME}:${DOCKER_TAG} --build-arg VERSION=${DOCKER_TAG} .
 
 test: &test
     name: Test using presentation-template
