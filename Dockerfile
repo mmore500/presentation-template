@@ -4,7 +4,7 @@ FROM ubuntu:18.04
 
 LABEL Maintainer "Matthew Andres Moreno"
 LABEL Contributors @vsoch
-LABEL Version 1.0.1
+LABEL Version 1.0.0
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANGUAGE en_US.UTF-8
