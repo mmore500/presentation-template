@@ -3,9 +3,9 @@
 BUILD_DIR := $(shell basename $(abspath $(dir $(lastword $(MAKEFILE_LIST)))))
 BUILD_DIR ?= presentation
 
-all: ${BUILD_DIR}.pdf
+all: clean ${BUILD_DIR}.pdf
 
-view:
+view: ${BUILD_DIR}.pdf
 	[ "$(shell uname)" = "Darwin" ] && open ${BUILD_DIR}.pdf \
 		|| xdg-open ${BUILD_DIR}.pdf 2>/dev/null
 
@@ -13,7 +13,6 @@ mmore500-presentation-template-master-latest.simg:
 	singularity pull shub://mmore500/presentation-template
 
 ${BUILD_DIR}.pdf: main.tex mmore500-presentation-template-master-latest.simg
-	rm -f ${BUILD_DIR}.pdf
 	singularity exec \
 		--bind ${PWD}:/data \
 		--pwd /data \
