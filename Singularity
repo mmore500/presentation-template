@@ -47,28 +47,6 @@ apt-get install -y dialog \
                    make
 
 ################################################################################
-# Install atom editor
-################################################################################
-
-apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    gconf2 \
-    gvfs-bin \
-    libasound2 \
-    libgtk2.0-0 \
-    libnotify4 \
-    libnss3 \
-    libxtst6 \
-    xdg-utils
-
-apt-get install -y wget && \
-    apt-get install -y libxkbfile1 && \
-    wget https://atom.io/download/deb -O atom.deb && \
-    dpkg -i atom.deb && \
-    rm -rf atom.deb
-
-################################################################################
 # Install Fonts
 ################################################################################
 

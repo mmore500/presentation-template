@@ -6,10 +6,8 @@ PDF_FILE?=mypdf
 all: ${PDF_FILE}.pdf
 
 view:
-	atom ${PDF_FILE}.pdf
-
-sview:
-	gnome-open ${PDF_FILE}.pdf 2>/dev/null
+	[ "$(shell uname)" = "Darwin" ] && open ${PDF_FILE}.pdf \
+		|| xdg-open ${PDF_FILE}.pdf 2>/dev/null
 
 mmore500-presentation-template-master-latest.simg:
 	singularity pull shub://mmore500/presentation-template
@@ -33,4 +31,4 @@ cleaner:
 	find . -type f -name ${PDF_FILE}"*" ! -name '*.simg*' ! -name '*.tex' ! -name '*.bib' -delete
 	rm -f main.nav main.snm
 
-.PHONY:  ${PDF_FILE}.pdf
+.PHONY:  ${PDF_FILE}.pdf view clean cleaner
