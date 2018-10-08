@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# entrypoint.sh
+# Author: @vsoch
+#   A simple entrypoint to use latexmk to generate a pdf from the main.tex file
+#   mounted in the /data folder of the container. If not found, the user is
+#   alerted that it should be bound there
+#
+#   Usage: Given some /data/main.tex
+#      /bin/bash entrypoint.sh mypdf
+#
+#   will generate mypdf.* output files, also in /data
+
 cd /data
 echo "contents of /data"
 ls -l "${PWD}"

@@ -4,7 +4,9 @@ FROM ubuntu:18.04
 
 LABEL Maintainer "Matthew Andres Moreno"
 LABEL Contributors @vsoch
-LABEL Version 1.0.0
+# The Version defaults to 1.0.0, or that provided as --build-arg
+ARG Version 1.0.0
+LABEL ${Version}
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANGUAGE en_US.UTF-8
