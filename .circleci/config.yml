@@ -20,6 +20,7 @@ defaults: &defaults
   working_directory: /tmp/src
   environment:
     - PDF_NAME: mypdf
+    - CONTAINER_NAME: mmore500/presentation-template
 
 # Installation
 
@@ -36,13 +37,8 @@ dockerenv: &dockerenv
         if [ ! -n "${DOCKER_TAG:-}" ]; then
             DOCKER_TAG=$(echo "${CIRCLE_SHA1}" | cut -c1-10)
         fi
-        # If not set, define CONTAINER_NAME
-        if [ ! -n "${CONTAINER_NAME:-}" ]; then
-            CONTAINER_NAME="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
-        fi
         echo "Container name is ${CONTAINER_NAME}"
         # export to bash environment
-        echo "export CONTAINER_NAME=${CONTAINER_NAME}" >> ${BASH_ENV}
         echo "export DOCKER_TAG=${DOCKER_TAG}" >> ${BASH_ENV}
         cat ${BASH_ENV}
 
