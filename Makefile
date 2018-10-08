@@ -21,6 +21,13 @@ ${BUILD_DIR}.pdf: main.tex mmore500-presentation-template-master-latest.simg
     		-jobname=${BUILD_DIR} \
     		-pdflatex="xelatex -interaction=nonstopmode" main.tex
 
+debug:
+	singularity exec \
+		--bind ${PWD}:/data \
+		--pwd /data \
+		mmore500-presentation-template-master-latest.simg \
+			xelatex -jobname=${BUILD_DIR} main.tex
+
 clean:
 	rm -f ${BUILD_DIR}.pdf
 
@@ -30,4 +37,4 @@ cleaner:
 	find . -type f -name ${BUILD_DIR}"*" ! -name '*.simg*' ! -name '*.tex' ! -name '*.bib' -delete
 	rm -f main.nav main.snm
 
-.PHONY: ${BUILD_DIR}.pdf view clean cleaner
+.PHONY: ${BUILD_DIR}.pdf view debug clean cleaner
