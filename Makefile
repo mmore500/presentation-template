@@ -1,34 +1,34 @@
 # get the basename of the containing directory
 # this will be used to name othe output document
 BUILD_DIR := $(shell basename $(abspath $(dir $(lastword $(MAKEFILE_LIST)))))
-PDF_FILE?=mypdf
+BUILD_DIR ?= presentation
 
-all: ${PDF_FILE}.pdf
+all: ${BUILD_DIR}.pdf
 
 view:
-	[ "$(shell uname)" = "Darwin" ] && open ${PDF_FILE}.pdf \
-		|| xdg-open ${PDF_FILE}.pdf 2>/dev/null
+	[ "$(shell uname)" = "Darwin" ] && open ${BUILD_DIR}.pdf \
+		|| xdg-open ${BUILD_DIR}.pdf 2>/dev/null
 
 mmore500-presentation-template-master-latest.simg:
 	singularity pull shub://mmore500/presentation-template
 
 ${BUILD_DIR}.pdf: main.tex mmore500-presentation-template-master-latest.simg
-	rm -f ${PDF_FILE}.pdf
+	rm -f ${BUILD_DIR}.pdf
 	singularity exec \
 		--bind ${PWD}:/data \
 		--pwd /data \
 		mmore500-presentation-template-master-latest.simg \
 			latexmk -pdf -silent \
-    		-jobname=${PDF_FILE} \
+    		-jobname=${BUILD_DIR} \
     		-pdflatex="xelatex -interaction=nonstopmode" main.tex
 
 clean:
-	rm -f ${PDF_FILE}.pdf
+	rm -f ${BUILD_DIR}.pdf
 
 cleaner:
 	latexmk -CA
 	# remove auxillary files, excepting .tex and .bib files
-	find . -type f -name ${PDF_FILE}"*" ! -name '*.simg*' ! -name '*.tex' ! -name '*.bib' -delete
+	find . -type f -name ${BUILD_DIR}"*" ! -name '*.simg*' ! -name '*.tex' ! -name '*.bib' -delete
 	rm -f main.nav main.snm
 
-.PHONY:  ${PDF_FILE}.pdf view clean cleaner
+.PHONY: ${BUILD_DIR}.pdf view clean cleaner
