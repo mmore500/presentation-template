@@ -3,7 +3,7 @@
 BUILD_DIR := $(shell basename $(abspath $(dir $(lastword $(MAKEFILE_LIST)))))
 BUILD_DIR ?= presentation
 
-all: clean ${BUILD_DIR}.pdf
+all: ${BUILD_DIR}.pdf
 
 view: ${BUILD_DIR}.pdf
 	[ "$(shell uname)" = "Darwin" ] && open ${BUILD_DIR}.pdf \
@@ -12,14 +12,14 @@ view: ${BUILD_DIR}.pdf
 mmore500-presentation-template-master-latest.simg:
 	singularity pull shub://mmore500/presentation-template
 
-${BUILD_DIR}.pdf: main.tex mmore500-presentation-template-master-latest.simg
-	singularity exec \
+${BUILD_DIR}.pdf: main.tex bibl.bib \
+									$(wildcard img/**/*) fig/* tex/* \
+									mmore500-presentation-template-master-latest.simg
+	singularity run \
 		--bind ${PWD}:/data \
 		--pwd /data \
 		mmore500-presentation-template-master-latest.simg \
-			latexmk -pdf -silent \
-    		-jobname=${BUILD_DIR} \
-    		-pdflatex="xelatex -interaction=nonstopmode" main.tex
+		${BUILD_DIR}
 
 debug:
 	singularity exec \
@@ -37,4 +37,4 @@ cleaner:
 	find . -type f -name ${BUILD_DIR}"*" ! -name '*.simg*' ! -name '*.tex' ! -name '*.bib' -delete
 	rm -f main.nav main.snm
 
-.PHONY: ${BUILD_DIR}.pdf view debug clean cleaner
+.PHONY: view debug clean cleaner
