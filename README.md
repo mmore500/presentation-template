@@ -54,6 +54,17 @@ Next, run it and bind the present working directory to data.
 singularity run --bind $PWD:/data presentation-template.simg mypdf
 ```
 
+## Development
+
+You should build the container with the version provided as a `--build-arg`
+as follows. For example, to build the version `1.0.1-rc`:
+
+```bash
+$ docker build --build-arg 1.0.1-rc -t vanessa/presentation-template:1.0.1-rc .
+$ docker push vanessa/presentation-template:1.0.1-rc
+```
+
+
 ### How To & What You Get
 
 The original post for the package is [here](https://twitter.com/MorenoMatthewA/status/1048676082952626177).
