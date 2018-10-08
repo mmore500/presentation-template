@@ -1,0 +1,218 @@
+# This is a continuous build CircleCI configuration for a Docker container
+# intended to bulid on CircleCI
+# The container is built and pushed to the CONTAINER_NAME variable
+# defined here or within the CircleCI settings. The following environment
+# variables are acceptable here or in these settings (for sensitive information)
+#
+# CONTAINER_NAME
+# DOCKER_USER
+# DOCKER_EMAIL
+
+################################################################################
+# Functions
+################################################################################
+
+# Defaults
+
+defaults: &defaults
+  docker:
+    - image: docker:18.01.0-ce-git
+  working_directory: /tmp/src
+  environment:
+    - PDF_NAME: mypdf
+
+# Installation
+
+install: &install
+    name: Install parallel gzip, gettext, python3, and jq
+    command: apk add --no-cache pigz python3 gettext jq
+
+
+
+dockerenv: &dockerenv
+    name: Define container and Docker names
+    command: |
+        # If not set, define DOCKER_TAG
+        if [ ! -n "${DOCKER_TAG:-}" ]; then
+            DOCKER_TAG=$(echo "${CIRCLE_SHA1}" | cut -c1-10)
+        fi
+        # If not set, define CONTAINER_NAME
+        if [ ! -n "${CONTAINER_NAME:-}" ]; then
+            CONTAINER_NAME="${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+        fi
+        echo "Container name is ${CONTAINER_NAME}"
+        # export to bash environment
+        echo "export CONTAINER_NAME=${CONTAINER_NAME}" >> ${BASH_ENV}
+        echo "export DOCKER_TAG=${DOCKER_TAG}" >> ${BASH_ENV}
+        cat ${BASH_ENV}
+
+
+dockerload: &dockerload
+    name: Load Docker container Image
+    no_output_timeout: 30m
+    command: | 
+        echo "Working directory is ${PWD}"
+        docker info
+        set +o pipefail
+        if [ -f /tmp/cache/container.tar.gz ]; then
+            apk update && apk add --no-cache pigz curl curl-dev
+            pigz -d --stdout /tmp/cache/container.tar.gz | docker load
+        fi
+      
+
+dockersave: &dockersave
+    name: Docker Save
+    no_output_timeout: 40m
+    command: |
+        source ${BASH_ENV}
+        echo "Saving ${CONTAINER_NAME}:${DOCKER_TAG} to container.tar.gz"
+        mkdir -p /tmp/cache
+        docker save ${CONTAINER_NAME}:${DOCKER_TAG} \
+          | pigz -2 -p 3 > /tmp/cache/container.tar.gz
+
+dockerdeploy: &dockerdeploy
+    name: Deploy to Docker Hub
+    no_output_timeout: 40m
+    command: |
+        source ${BASH_ENV}
+        docker images
+        echo "Container name set to ${CONTAINER_NAME}:${DOCKER_TAG}"
+        if [[ -n "$DOCKER_PASS" ]]; then
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push ${CONTAINER_NAME}:${DOCKER_TAG}
+            echo "Tagging latest image..."
+            docker tag ${CONTAINER_NAME}:${DOCKER_TAG} ${CONTAINER_NAME}:latest
+            docker push ${CONTAINER_NAME}:latest
+        fi
+
+dockerbuild: &dockerbuild
+    name: Build development Docker container
+    command: |
+        source ${BASH_ENV}
+        echo "Building base image..."
+        docker build -t ${CONTAINER_NAME}:${DOCKER_TAG} --build-arg VERSION=${DOCKER_TAG} .
+
+test: &test
+    name: Test using presentation-template
+    command: |
+        source ${BASH_ENV}
+        echo "Testing ${CONTAINER_NAME} entrypoint"
+        cd /tmp/src
+        export CONTAINER="${CONTAINER_NAME}:${DOCKER_TAG}"
+        echo "1. Starting ${CONTAINER} to generate pdf!"
+        echo "docker run --name pt --entrypoint bash -dt ${CONTAINER}"
+        docker run --name pt --entrypoint bash -dt ${CONTAINER}
+        echo "2. Copying latex inputs into container at /data..."
+        echo "docker cp ./. pt:/data/"
+        docker cp ./. pt:/data/
+        echo "3. Generating the PDF!"
+        echo "docker exec pt /bin/bash /code/entrypoint.sh ${PDF_NAME}"
+        docker exec pt /bin/bash /code/entrypoint.sh ${PDF_NAME}
+        echo "4. Obtaining finished build for artifacts"
+        mkdir -p /tmp/pdf
+        echo "docker cp pt:/data/. /tmp/pdf"
+        docker cp pt:/data/. /tmp/pdf
+        echo "5. Creating archive."
+        echo "tar czf ${PDF_NAME}.tar.gz /tmp/pdf"
+        tar czf ${PDF_NAME}.tar.gz /tmp/pdf
+        mv ${PDF_NAME}.tar.gz /tmp/pdf
+        echo "6. Stopping container..."
+        docker stop pt
+        echo "Contents of /tmp"
+        ls /tmp
+        echo "Contents of /tmp/pdf"
+        ls /tmp/pdf
+
+################################################################################
+# Jobs
+################################################################################
+
+
+version: 2
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - docker-v1-{{ .Branch }}
+          paths:
+            - /tmp/cache/container.tar.gz
+      - setup_remote_docker
+      - run: *install
+      - run: *dockerenv
+      - run: *dockerload
+      - run: *dockerbuild
+      - run: *test
+      - store_artifacts:
+            path: /tmp/pdf
+            destination: pdf-files
+      - run: *dockersave
+      - persist_to_workspace:
+            root: /tmp
+            paths:
+                - pdf
+                - src
+                - cache
+
+  update_cache:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - save_cache:
+         key: docker-v1-{{ .Branch }}
+         paths:
+            - /tmp/cache/container.tar.gz
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - setup_remote_docker
+      - run: *dockerenv
+      - run: *dockerload
+      - run: *dockerdeploy
+
+
+################################################################################
+# Workflows
+################################################################################
+
+
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: 
+                - gh-pages
+                - /docs?/.*/
+            tags:
+              only: /.*/
+
+      - update_cache:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: 
+                - gh-pages
+                - /docs?/.*/
+            tags:
+              only: /.*/
+
+      # Upload the container to Docker Hub
+      - deploy:
+          requires:
+            - build
+            - update_cache
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /.*/

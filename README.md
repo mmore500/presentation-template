@@ -1,6 +1,7 @@
 ## Presentation Template
 
 [![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1774)
+[![CircleCI](https://circleci.com/gh/mmore500/presentation-template.svg?style=svg)](https://circleci.com/gh/mmore500/presentation-template)
 
 A LaTeX Beamer template for presentations using the Metropolis theme.
 
