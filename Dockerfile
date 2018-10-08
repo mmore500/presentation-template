@@ -1,13 +1,19 @@
 FROM ubuntu:18.04
 
+# 
 # docker build -t presentation-template .
+#
+# With Version
+# docker build -t vanessa/presentation-template:1.0.1-rc --build-arg Version=1.0.1-rc .
+
 
 LABEL Maintainer "Matthew Andres Moreno"
 LABEL Contributors @vsoch
 # The Version defaults to 1.0.0, or that provided as --build-arg
-ARG Version 1.0.0
-LABEL ${Version}
+ARG VERSION=1.0.0
+LABEL VERSION=$VERSION
 
+RUN echo "Version is ${VERSION}"
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8

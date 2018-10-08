@@ -60,7 +60,7 @@ You should build the container with the version provided as a `--build-arg`
 as follows. For example, to build the version `1.0.1-rc`:
 
 ```bash
-$ docker build --build-arg 1.0.1-rc -t vanessa/presentation-template:1.0.1-rc .
+$ docker build -t vanessa/presentation-template:1.0.1-rc --build-arg Version=1.0.1-rc .
 $ docker push vanessa/presentation-template:1.0.1-rc
 ```
 
