@@ -29,12 +29,12 @@ mypdf.aux  mypdf.bbl  mypdf.blg  mypdf.fdb_latexmk  mypdf.fls  mypdf.log  mypdf.
 ```
 
 If you don't want to build the container (it takes quite some time) this development
-container is provided at [vanessa/presentation-template](https://hub.docker.com/r/vanessa/presentation-template/). You can run it as follows:
+container is provided at [mmore500/presentation-template](https://hub.docker.com/r/mmore500/presentation-template/). You can run it as follows:
 
 ```bash
-git clone https://www.github.com/vsoch/presentation-template
+git clone https://www.github.com/mmore500/presentation-template
 cd presentation-template
-docker run -it -v $PWD:/data vanessa/presentation-template mypdf
+docker run -it -v $PWD:/data mmore500/presentation-template mypdf
 ```
 
 An [example](example) output is provided. Have fun!
@@ -60,8 +60,8 @@ You should build the container with the version provided as a `--build-arg`
 as follows. For example, to build the version `1.0.1-rc`:
 
 ```bash
-$ docker build -t vanessa/presentation-template:1.0.1-rc --build-arg Version=1.0.1-rc .
-$ docker push vanessa/presentation-template:1.0.1-rc
+$ docker build -t mmore500/presentation-template:1.0.1-rc --build-arg Version=1.0.1-rc .
+$ docker push mmore500/presentation-template:1.0.1-rc
 ```
 
 
@@ -77,4 +77,4 @@ Matthew Andres Moreno
 
 ### Contributors
 
- - [@vsoch](https://www.github.com/vsoch) contributed Dockerfile and build / run instructions.g
+ - [@vsoch](https://www.github.com/vsoch) contributed Dockerfile and build / run instructions, continuous integration
