@@ -11,7 +11,7 @@ From: ubuntu:18.04
 %labels
     Maintainer Matthew Andres Moreno
     Contributors @vsoch
-    Version 1.0.1
+    Version 1.0.0
 
 ################################################################################
 # Copy any necessary files into the container

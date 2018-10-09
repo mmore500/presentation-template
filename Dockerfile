@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-# 
+#
 # docker build -t presentation-template .
 #
 # With Version
@@ -10,11 +10,11 @@ FROM ubuntu:18.04
 LABEL Maintainer "Matthew Andres Moreno"
 LABEL Contributors @vsoch
 
-# The Version defaults to 1.0.0, or that provided as --build-arg
-ARG VERSION=1.0.0
+# The Version defaults to null, or that provided as --build-arg
+ARG VERSION=null
 LABEL VERSION=$VERSION
 
-LABEL source "version 1.0.0"
+LABEL source "v1.0.0"
 
 RUN echo "Version is ${VERSION}"
 ENV DEBIAN_FRONTEND noninteractive
