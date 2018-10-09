@@ -14,7 +14,7 @@ LABEL Contributors @vsoch
 ARG VERSION=null
 LABEL VERSION=$VERSION
 
-LABEL source "v1.0.0"
+LABEL source "v1.1.0"
 
 RUN echo "Version is ${VERSION}"
 ENV DEBIAN_FRONTEND noninteractive
